@@ -66,5 +66,20 @@ enum Suit : Int {
         return "Clubs"
       }
     }
+
+    // Report the simple description of this suit
+    func briefDescription() -> String {
+      switch self {
+      case .spades:
+        return "S"
+      case .hearts:
+        return "H"
+      case .diamonds:
+        return "D"
+      case .clubs:
+        return "C"
+      }
+    }
+
     
 }
