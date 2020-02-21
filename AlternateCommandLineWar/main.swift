@@ -33,8 +33,6 @@ class BeggarYourNeighbour {
         offence = player
         defence = computer
         
-        
-        
         // Make a deck of cards
         deck = Deck()
         
@@ -51,39 +49,78 @@ class BeggarYourNeighbour {
         // Pot is empty to begin
         pot.cards = []
         
+        play()
+        
     }
     
     func switchWhoIsOnOffence() {
         
         if offence === player {
-            //offence is player, so...
+            // Offence is player, so...
             offence = computer
             defence = player
         }
         else {
-            //offence is computer, so...
+            // Offence is computer, so...
             offence = player
             defence = computer
         }
         
     }
+    
+    /// Implement a showdown - the defence must trigger a new showdown or lose the pot to the offence
+    /// - Returns: true when the show down completed and offence won cards
+    func showDown() -> Bool {
+        
+        var skipAssigningCardsToWinner: Bool = false
+        
+        // Repeat based on the raw value of the face card
+        // Ace - 4 times
+        // King - 3 times
+        // etc
+        for _ in 1...pot.topCard!.rank.rawValue - 10 {
+            // Defense plays top card
+            pot.cards.append(defence.dealTopCard()!)
+            
+            // If defense is able to play a face card
+            if pot.topCard!.rank.rawValue > 10 {
+                // Switch who is on offence so they play next
+                switchWhoIsOnOffence()
+                
+                // Re-do showdown with reversed roles
+                if showDown() == true { //
+                    skipAssigningCardsToWinner = true
+                    break // stop the loop
+                }
+            }
+        }
+        
+        // If we get here, the offence has won since the defence did not trigger a new showdown
+        // Offence gets all the cards only at the lowest recursion level
+        if skipAssigningCardsToWinner == false {
+            // Assign the cards to the winner
+        }
+        return true // this signals that cards were already assigned to winner
+        
+    }
+    
+    private func play() {
+        // Offense plays top card
+        pot.cards.append(offence.dealTopCard()!)
+        
+        if pot.topCard!.rank.rawValue > 10 {
+            // If the most recently played card is a jack, queen, king, or ace
+            // Show down
+            showDown()
+        } else {
+            // Switch who is on offence so they play next
+            switchWhoIsOnOffence()
+        }
+    }
 }
 
-//// In War, the game is not over until a hand has either 0 or 52 cards
-//class WarHand: Hand {
-//
-//    // Until a hand has 0 cards, or 52 cards, the game is not over
-//    func hasNotWon() -> Bool {
-//        if self.cards.count > 0 && self.cards.count < 52 {
-//            return true
-//        } else {
-//            return false
-//        }
-//    }
-//
-//}
-//
-//
+
+
 //// Create a new datatype to represent a game of war
 //class War {
 //
@@ -351,3 +388,4 @@ class BeggarYourNeighbour {
 //}
 //
 //War(debugMode: false)
+
