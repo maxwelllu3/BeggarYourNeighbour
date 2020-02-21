@@ -99,6 +99,7 @@ class BeggarYourNeighbour {
         // Offence gets all the cards only at the lowest recursion level
         if skipAssigningCardsToWinner == false {
             // Assign the cards to the winner
+            defence.cards.append(contentsOf: pot.cards)
         }
         return true // this signals that cards were already assigned to winner
         
